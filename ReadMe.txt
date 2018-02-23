@@ -1,5 +1,5 @@
 Introduction:
-	This is a machine learning program that is easy to use. Many of this program's
+	This is a machine learning program that is easy to use. A lot of this program's
 	code is borrowed from my number recognision project, but I have made several
 	important improvements:
 		This program is able to read CSV file, which is used very commonly.
