@@ -28,7 +28,7 @@ Instruction:
 
 		pep is the target attribute(the predicted attribute)
 
-		numericAttributes is a list of the names of numeric attributes,
+		numericAttributes is a list of numeric attributes,
 			in the example it is income, age, and number of children
 		useless is a list of attributes, which you do not want to include 
 			in the learning process
