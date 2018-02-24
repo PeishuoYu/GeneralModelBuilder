@@ -186,8 +186,8 @@ def getLeaf(beginningNode, leaves):
 # this function export a model to a txt file, there will be all the attribute and possible value, the target attribute
 # and possible value, and the model that has been established (included attribute, predict result, number of occurrence,
 # and entropy
-def exportModel(beginningNode):
-    file = open('model.txt', 'w', encoding='utf-8')
+def exportModel(beginningNode, modelName):
+    file = open(modelName + '.txt', 'w', encoding='utf-8')
     file.write('attributes:\n')
     file.write(str(attribute_key) + '\n')
     file.write('numeric:\n')
@@ -264,32 +264,33 @@ def interactive_mode(fileName, targetAttribute, numericAttributes):
         words = input()
 
 
-# make the prediction based on the existing model file (model.txt) and the input from test.csv
+# make the prediction based on the existing model file (model1.txt) and the input from test.csv
 # if the prediction is wrong, enter the right value, and this prediction question will be moved to training set
-def makePrediction(fileName):
-    file = open('model.txt', 'r', encoding='utf-8')
-    content = file.readlines()
-    file.close()
-    numeric_attributes = eval(content[3])
-    feature = eval(content[5])
-    with open(fileName + '.csv', encoding='utf-8', newline='\n') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for data in reader:
-            for result in feature:
-                fit = True
-                for attribute in result[0]:
-                    if attribute.split('<=')[0] in numeric_attributes:
-                        if float(data[attribute.split('<=')[0]]) > float(attribute.split('<=')[1]):
-                            if result[0][attribute] == 'yes':
-                                fit = False
-                        else:
-                            if result[0][attribute] == 'no':
-                                fit = False
-                    elif data[attribute] != result[0][attribute]:
-                        fit = False
-                if fit:
-                    print('\n\n\n     Prediction: ' + result[1] + '\n\n\n')
-        csvfile.close()
+def makePrediction(fileName, modelList):
+    for i in modelList:
+        file = open(i + '.txt', 'r', encoding='utf-8')
+        content = file.readlines()
+        file.close()
+        numeric_attributes = eval(content[3])
+        feature = eval(content[5])
+        with open(fileName + '.csv', encoding='utf-8', newline='\n') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for data in reader:
+                for result in feature:
+                    fit = True
+                    for attribute in result[0]:
+                        if attribute.split('<=')[0] in numeric_attributes:
+                            if float(data[attribute.split('<=')[0]]) > float(attribute.split('<=')[1]):
+                                if result[0][attribute] == 'yes':
+                                    fit = False
+                            else:
+                                if result[0][attribute] == 'no':
+                                    fit = False
+                        elif data[attribute] != result[0][attribute]:
+                            fit = False
+                    if fit:
+                        print('\n\n\n     ' + i + ': ' + result[1] + '\n\n\n')
+            csvfile.close()
     return
 
 
@@ -334,7 +335,7 @@ def numeric(content, numeric_attributes):
 
 
 # this function is used to train the data and export model
-def training(fileName, targetAttribute, numericAttributes=[], useless=[], minnum=0, maxdepth=-1):
+def training(fileName, targetAttribute, numericAttributes=[], useless=[], minnum=0, maxdepth=-1, modelName='model'):
     global target_attribute, numeric_attributes, useless_attribute
     target_attribute = targetAttribute
     numeric_attributes = numericAttributes
@@ -344,23 +345,27 @@ def training(fileName, targetAttribute, numericAttributes=[], useless=[], minnum
         content = numeric(content, numeric_attributes)
     tree = node({}, content)
     computing([tree], minnum, maxdepth)
-    exportModel(tree)
+    exportModel(tree, modelName)
 
 
-# instruction:
-#   training('bank-data', 'pep', numericAttributes=['income', 'age', 'children'], maxdepth=5, minnum=20)
+# General instruction:
+#   training('bank-data', 'pep', numericAttributes=['income', 'age', 'children'], maxdepth=5, minnum=20, model_name = 'PersonalEducationPlan')
 #   This means:
 #       the training set is bank-data.csv
 #       pep is the target value (the predicted attribute)
 #       numericAttributes is a list of numeric attributes, in the example it is income, age, number of children
 #       useless is a list of attributes, which you do not want to include in the learning process
 #       maxdepth is the maximum depth of the tree, in this case is 5
-#	minnum is the minimum size of sorted dataSet in this case is 20
+#       model_name is the name of model that will be established
+#	    minnum is the minimum size of sorted dataSet in this case is 20
 #
-#   makePrediction('test')
-#       This function will read the data in test.csv and make prediction based on model.txt in the root folder.
+#   makePrediction('test', ['modelName0', modelName1'])
+#       This function will read the data in test.csv and make prediction based on the models saved in the root folder.
+#
+# Prediction result:
+#       0 means that the event described in predicted variable name will not happen, 1 means will
 
 
-#training('bank-data', 'pep', numericAttributes=['income', 'age', 'children'], useless=['id'], maxdepth=5, minnum=20)
-makePrediction('test')
+training('bank-data', 'pep', numericAttributes=['income', 'age', 'children'], useless=['id'], maxdepth=5, minnum=20, modelName='PersonalEducationPlan')
+makePrediction('test', ['wow'])
 #interactive_mode('bank-data', 'pep', numericAttributes=['children', 'income', 'age'])

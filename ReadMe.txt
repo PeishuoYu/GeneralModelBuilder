@@ -10,17 +10,9 @@ Introduction:
 		Now useless attributes can be included in the data set. (Sounds kind of
 			weird :-)
 
-
-In this folder, there are:
-	bank-data.csv		Training set of the program, containing 400 pieces of data (66%)
-	test.csv		Testing set, containing 200 pieces of data (33%)
-	model.txt		Pre-established model
-	GeneralModelBuilder.py	Program that builds model and makes prediction
-
-
 Instruction:
 	training('bank-data', 'pep', numericAttributes=['income', 'age', 'children'], 
-	useless=['id'], maxdepth=5, minnum=20)
+	useless=['id'], maxdepth=5, minnum=20, model_name='wow')
 	
 	This means:
 
@@ -35,12 +27,12 @@ Instruction:
 		maxdepth is the maximum depth of the tree, in this case is 5
 	
 		minnum is the minimum size of sorted dataSet in this case is 20
-   
-	
-	makePrediction('test')
 
-	This function will read the data in test.csv and make prediction based on
-	model.txt in the root folder.
+	        model_name is the name of model that will be established 
+	
+	makePrediction('test', ['modelName0', modelName1'])
+		This function will read the data in test.csv and make prediction based 
+		on the models saved in the root folder.
 
 
 This folder includes a sample, after I trained the model with training set and made
