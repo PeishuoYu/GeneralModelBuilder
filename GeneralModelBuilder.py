@@ -367,5 +367,5 @@ def training(fileName, targetAttribute, numericAttributes=[], useless=[], minnum
 
 
 training('bank-data', 'pep', numericAttributes=['income', 'age', 'children'], useless=['id'], maxdepth=5, minnum=20, modelName='PersonalEducationPlan')
-makePrediction('test', ['wow'])
+makePrediction('test', ['PersonalEducationPlan'])
 #interactive_mode('bank-data', 'pep', numericAttributes=['children', 'income', 'age'])
